@@ -13,9 +13,12 @@ class DevicesScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Devices")),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () => context.read<DeviceProvider>().loadDevices(),
-            child: const Text("Load Devices"),
+            Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: ElevatedButton(
+              onPressed: () => context.read<DeviceProvider>().loadDevices(),
+              child: const Text("Load Devices"),
+            ),
           ),
           Expanded(
             child: _buildContent(provider),

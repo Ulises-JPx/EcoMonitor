@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Column(
-      children: cards.map((c) => Padding(padding: const EdgeInsets.only(bottom: 12), child: SizedBox(width: double.infinity, height: 110, child: c))).toList(),
+      children: cards.map((c) => Padding(padding: const EdgeInsets.only(bottom: 10), child: SizedBox(width: double.infinity, child: c))).toList(),
     );
   }
 
@@ -193,34 +193,34 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.sensors, size: 32, color: Theme.of(context).primaryColor),
-              const SizedBox(width: 12),
+              Icon(Icons.sensors, size: 26, color: Theme.of(context).primaryColor),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text(display, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 4),
-                      if (timestamp != null)
-                                Text(friendlyTimestamp(timestamp), style: const TextStyle(fontSize: 11, color: Colors.black45)),
-                      // If provider is loading we keep the card visible and show a small loader
-                      if (context.watch<SensorProvider>().isLoading)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 6.0),
-                          child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
-                        ),
-                      ],
+                    Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: 2),
+                    Text(display, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: 2),
+                    if (timestamp != null)
+                      Text(friendlyTimestamp(timestamp), style: const TextStyle(fontSize: 10, color: Colors.black45), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    // If provider is loading we keep the card visible and show a very small loader
+                    if (context.watch<SensorProvider>().isLoading)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 2)),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               const Icon(Icons.chevron_right, color: Colors.black38),
             ],
           ),
