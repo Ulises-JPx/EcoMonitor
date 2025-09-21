@@ -1,0 +1,19 @@
+# --- Core Web Framework ---
+flask
+
+# --- HTTP Requests ---
+requests
+
+# --- Data Handling ---
+pandas
+openpyxl
+
+# --- Google Sheets API (authenticated access) ---
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
+# --- Simplified Google Sheets clients (optional but recommended) ---
+gspread
+pygsheets
+flask-cors
