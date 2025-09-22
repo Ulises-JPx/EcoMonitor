@@ -74,7 +74,7 @@ The app expects a configurable Backend base URL inside the API service or consta
 Default:
 
 ```dart
-http://127.0.0.1:5001;
+'http://127.0.0.1:5001;'
 ```
 
 ## Common development tasks
