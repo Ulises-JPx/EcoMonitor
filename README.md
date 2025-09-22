@@ -18,7 +18,7 @@ taught by **Professor David Higuera**, as part of the course:
 
 ![EcoMonitor Demo](assets/demo.gif)
 
-Watch the full video [here](assets/demo.mp4)
+Watch the full video [here](https://youtube.com/shorts/hDFjyoqIGNY?feature=share)
 
 ---
 
