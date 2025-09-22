@@ -14,6 +14,14 @@ taught by **Professor David Higuera**, as part of the course:
 
 ---
 
+## 🎥 Demo Preview
+
+![EcoMonitor Demo](assets/demo.gif)
+
+Watch the full video [here](assets/demo.mp4)
+
+---
+
 ## Project Overview
 
 - **Embedded System**  
@@ -95,4 +103,4 @@ This project is distributed under the terms of the license found in [`LICENSE`](
 
 ---
 
-✨ For troubleshooting, development tips, and extended documentation, refer to the **Backend** and **Frontend** READMEs.
+For troubleshooting, development tips, and extended documentation, refer to the **Backend** and **Frontend** READMEs.
