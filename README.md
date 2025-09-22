@@ -1,211 +1,98 @@
-# EcoMonitor — Backend API
+# EcoMonitor
 
-Professional, lightweight Flask-based API that provides sensor data ingestion and query endpoints for the EcoMonitor project.
+**EcoMonitor** is an integrated environmental monitoring system that combines an embedded sensor unit with both web and mobile applications.  
+It collects, stores, and visualizes environmental data for use in **research** and **precision agriculture**.
 
-This README documents how to install, configure, run, test and deploy the backend service. It also includes examples for common API calls and troubleshooting notes.
+---
 
-## Contents
+## Context
 
-- Overview
-- Requirements
-- Quick start (local)
-- Configuration
-- Endpoints & examples
-- Testing
-- Deployment (Docker)
-- Troubleshooting
-- Contributing
-- License
+This project was developed for **Practice #3** of **Module 4: Hardware Integration for Data Science**,  
+taught by **Professor David Higuera**, as part of the course:
 
-## Overview
+**Advanced Artificial Intelligence for Data Science I (Group 101)** — *Team 2*
 
-The Backend is a Flask application that exposes a small REST API to access sensor measurements collected from Google Sheets or a local CSV fallback. It offers filtering by sensor, device and time range. The project is intentionally lightweight to make it easy to run locally or inside containers.
+---
 
-Key features
+## Project Overview
 
-- Load sensor data from public Google Sheets URLs (configurable) or local CSV file
-- Filter data by sensor name, device id and ISO/DATE ranges
-- Expose endpoints: `/`, `/data`, `/sensors`, `/devices`
-- Simple, dependency-light Python stack
+- **Embedded System**  
+  A sensor node (ESP32 / Arduino-based) that captures signals such as temperature, humidity, CO₂, light (LDR), and air quality (MQ135).  
+  Data is timestamped and transmitted to a central sink (Google Sheets API or local CSV).
 
-## Requirements
+- **Backend**  
+  Lightweight **Flask API** that ingests sensor data from Google Sheets (or CSV fallback) and exposes endpoints for querying devices and historical readings.
 
-- Python 3.9+ (3.10/3.11 recommended)
-- pip
-- Git (optional)
+- **Frontend**  
+  **Flutter application** for visualization, device discovery, and basic management.  
+  Compatible with **mobile** and **web** platforms.
 
-Python dependencies are declared in `requirements.txt`:
+---
 
-- flask
-- flask-cors
-- requests
-- pandas
-- openpyxl
-- google-api-python-client
-- google-auth-httplib2
-- google-auth-oauthlib
-- gspread (optional)
-- pygsheets (optional)
+## Team — *Team 2*
 
-Install dependencies into a virtualenv for a clean environment:
+- Ulises Jaramillo Portilla — *A01798380* — [GitHub Profile](https://github.com/Ulises-JPx)  
+- Jesús Ángel Guzmán Ortega — *A01799257* — [GitHub Profile](https://github.com/JesusAGO24)  
+- Sebastian Espinoza Farías — *A01750311* — [GitHub Profile](https://github.com/Sebastian-Espinoza-25)  
+- Santiago Villazón Ponce de León — *A01746396* — [GitHub Profile](https://github.com/SantiagoVilla09)  
+- Luis Ubaldo Balderas Sanchez — *A01751150* — [GitHub Profile](https://github.com/Luiss1715)  
+- José Antonio Moreno Tahuilán — *A01747922* — [GitHub Profile](https://github.com/pepemt)  
 
-```bash
-# macOS / Linux (zsh)
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r Backend/requirements.txt
-```
+---
 
-## Quick start (local)
+## Quick Start
 
-1. Ensure dependencies are installed (see Requirements).
-2. Start the API server:
+1. **Backend**  
+   - See [`Backend/README.md`](Backend/README.md) for setup.  
+   - Run with:  
+     ```bash
+     python src/app.py
+     ```  
+     or use the provided **Dockerfile**.
 
-```bash
-cd Backend
-source ../.venv/bin/activate  # if you created a virtualenv in repo root
-python src/app.py
-```
+2. **Frontend**  
+   - Navigate to `Frontend/`  
+   - Install dependencies and run:  
+     ```bash
+     flutter pub get
+     flutter run
+     ```  
+   - For Android emulators, use `10.0.2.2` as the backend host.
 
-By default the app prints the listening address and reveals available endpoints. Default host/port are configured in `src/config/settings.py` (FLASK_HOST, FLASK_PORT).
+---
 
-If you prefer to run with environment isolation use Docker (see Deployment).
+## Embedded System
 
-## Configuration
+The embedded component is built on an **ESP32** (Arduino-compatible).  
+It reads multiple analog and digital sensors:
 
-All runtime configuration is in `src/config/settings.py`.
+- Temperature  
+- Humidity  
+- CO₂  
+- Light (LDR)  
+- Air Quality (MQ135)
 
-Important values:
+Each reading is formatted with an **ISO timestamp** and **device identifier**, then uploaded to:  
+- A **cloud-accessible CSV** (Google Sheets export), or  
+- Directly to the **Backend API**  
 
-- SHEET_URLS: list of public Google Sheets CSV export URLs (preferred source)
-- CSV_FILE: local CSV fallback path
-- FLASK_HOST, FLASK_PORT, DEBUG_MODE: Flask server options
-- SENSORS: mapping of sensor logical names to CSV columns, units and types
+Designed for **low-power field deployment** and seamless integration into the ingestion pipeline.
 
-You can override configuration by editing `settings.py` or by creating a simple wrapper script that sets environment variables and updates app config before calling `app.run(...)`.
+---
 
-## API Endpoints
+## Documentation
 
-Base URL: http://<host>:<port>/ (default: 0.0.0.0:5001)
+- **Backend Guide** → installation, configuration, API reference, Docker usage  
+- **Frontend Guide** → Flutter setup, run/build instructions  
 
-1) GET /
+See the corresponding `README.md` files inside each folder.
 
-Returns a small JSON with API information and available endpoints.
-
-Example response:
-
-```json
-{
-  "message": "ECOMONITOR API 🌱",
-  "endpoints": { "/data": "Get sensor data with filters", "/sensors": "List available sensors", "/devices": "List available devices" }
-}
-```
-
-2) GET /data
-
-Query parameters:
-- sensor (optional) — logical sensor key (see `SENSORS` in settings)
-- device_id (optional)
-- start_date (optional) — YYYY-MM-DD or full ISO (e.g. 2024-01-02T15:04:05)
-- end_date (optional)
-
-Behavior:
-
-- If `sensor` is provided: returns an array of objects with timestamp, deviceId, value, unit, sensor and type
-- Without `sensor` it returns the raw dataset rows filtered by device and date range
-
-Examples:
-
-Request: GET /data?sensor=temperature&device_id=esp32-1&start_date=2024-01-01
-
-Response (abbreviated):
-
-```json
-{
-  "records": 123,
-  "filters": {"sensor":"temperature","device_id":"esp32-1","start_date":"2024-01-01","end_date":null},
-  "data": [ {"timestamp":"2024-01-02T12:00:00Z","deviceId":"esp32-1","value":23.4,"unit":"°C","sensor":"temperature","type":"numeric"}, ... ]
-}
-```
-
-3) GET /sensors
-
-Returns the sensor mapping defined in configuration with lists of numeric and categorical sensors.
-
-4) GET /devices
-
-Returns a list of device identifiers discovered in the dataset.
-
-## Error handling & status codes
-
-- 200: successful request
-- 404: not found or invalid sensor name
-- 500: internal server error or data loading failure
-
-When date formats are invalid, the API returns a 404 with a helpful message (see `data_service.get_data_with_filters`).
-
-## Testing
-
-There is a simple test file at `test/test_api.py`. To run the tests:
-
-```bash
-# From the repository root
-source .venv/bin/activate
-pip install -r Backend/requirements.txt pytest
-pytest -q
-```
-
-If you add tests, keep them small and focused. Consider mocking `requests.get` when testing Google Sheets download behavior.
-
-## Deployment (Docker)
-
-Below is a small Dockerfile you can use in the Backend folder. Create `Backend/Dockerfile` with:
-
-```dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY Backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-COPY Backend/src ./src
-ENV PYTHONUNBUFFERED=1
-EXPOSE 5001
-CMD ["python", "src/app.py"]
-```
-
-Build and run:
-
-```bash
-docker build -t ecomonitor-backend .
-docker run -p 5001:5001 --rm ecomonitor-backend
-```
-
-Tip: mount a volume for a local CSV fallback if you want to provide custom data:
-
-```bash
-docker run -p 5001:5001 -v $(pwd)/Backend/data:/app/data ecomonitor-backend
-```
-
-## Troubleshooting
-
-- If Google Sheets are not public, the service will fallback to the local CSV. Ensure `SHEET_URLS` point to an export CSV link or the sheet is public.
-- Common error: network timeouts when fetching Sheets — increase requests timeout in `data_service.load_sheet_data` if needed.
-- CSV paths are relative to the working directory; use absolute paths or mount volumes in Docker to avoid file-not-found errors.
-
-## Contributing
-
-Contributions are welcome. To contribute:
-
-1. Fork the repository
-2. Create a feature branch
-3. Run tests and linters locally
-4. Open a PR with a clear description
-
-Keep changes small and provide unit tests for non-trivial logic.
+---
 
 ## License
 
-See the repository `LICENSE` for license details.
+This project is distributed under the terms of the license found in [`LICENSE`](LICENSE).
 
 ---
-Generated and maintained by the EcoMonitor project maintainers.
+
+✨ For troubleshooting, development tips, and extended documentation, refer to the **Backend** and **Frontend** READMEs.
