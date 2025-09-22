@@ -1,6 +1,7 @@
 /// SensorMap
 /// ----------
 /// Maps human-friendly names to backend sensor keys.
+library;
 
 class SensorMap {
   /// Map of display names (for UI) to backend sensor keys

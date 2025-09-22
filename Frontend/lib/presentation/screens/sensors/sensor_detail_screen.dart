@@ -25,7 +25,7 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
     }).toList();
     final unit = data.isNotEmpty ? data.last.unit : '';
     // X labels: start, mid, end timestamps (short)
-    String _short(String ts) {
+    String short(String ts) {
       try {
         final dt = DateTime.parse(ts).toLocal();
         return '${dt.hour.toString().padLeft(2,'0')}:${dt.minute.toString().padLeft(2,'0')}';
@@ -35,9 +35,9 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
     }
     final labelsX = <String>[];
     if (data.isNotEmpty) {
-      labelsX.add(_short(data.first.timestamp));
-      labelsX.add(_short(data[data.length ~/ 2].timestamp));
-      labelsX.add(_short(data.last.timestamp));
+      labelsX.add(short(data.first.timestamp));
+      labelsX.add(short(data[data.length ~/ 2].timestamp));
+      labelsX.add(short(data.last.timestamp));
     }
 
     return Scaffold(
@@ -158,7 +158,11 @@ class LineChartPainter extends CustomPainter {
     for (var i = 0; i < values.length; i++) {
       final x = dx * i;
       final y = size.height - ((values[i] - minV) / range) * size.height;
-      if (i == 0) path.moveTo(x, y); else path.lineTo(x, y);
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
     }
 
     // draw grid lines and Y labels
@@ -166,11 +170,11 @@ class LineChartPainter extends CustomPainter {
       ..color = Colors.grey.withOpacity(0.12)
       ..style = PaintingStyle.stroke;
     final labelStyle = TextStyle(fontSize: 11, color: Colors.black54);
-    final textPainter = (String text, Offset offset) {
+    void textPainter(String text, Offset offset) {
       final tp = TextPainter(text: TextSpan(text: text, style: labelStyle), textDirection: TextDirection.ltr);
       tp.layout();
       tp.paint(canvas, offset);
-    };
+    }
 
     for (var i = 0; i <= 4; i++) {
       final yy = size.height * i / 4;

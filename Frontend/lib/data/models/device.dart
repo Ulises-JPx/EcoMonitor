@@ -1,6 +1,7 @@
 /// Device model
 /// -------------
 /// Represents an IoT device that sends sensor data.
+library;
 
 class Device {
   final String id; // e.g. "esp32-1"

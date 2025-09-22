@@ -303,7 +303,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         value: isSel,
                         onChanged: (v) {
                           setState(() {
-                            if (v == true) selected.add(backend); else selected.remove(backend);
+                            if (v == true) {
+                              selected.add(backend);
+                            } else {
+                              selected.remove(backend);
+                            }
                           });
                         },
                       );

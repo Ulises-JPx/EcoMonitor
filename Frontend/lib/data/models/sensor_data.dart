@@ -1,6 +1,7 @@
 /// SensorData model
 /// -----------------
 /// Represents a single sensor measurement from /data endpoint.
+library;
 
 class SensorData {
   final String timestamp;   // e.g. "2025-09-18T00:44:51-06:00"

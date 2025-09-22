@@ -104,7 +104,7 @@ class TeamScreen extends StatelessWidget {
                       IconButton(
                         icon: Image.asset('lib/presentation/images/github.png', width: 28, height: 28),
                         onPressed: () {
-                          final url = m['github'] as String?;
+                          final url = m['github'];
                           if (url != null && url.isNotEmpty) _openUrl(url);
                         },
                       )

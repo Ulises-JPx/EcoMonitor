@@ -11,7 +11,7 @@ class AppConfig {
   static Future<String> getApiBaseUrl() async {
     if (kIsWeb) {
       // Web can't use dart:io, fallback to manual LAN IP
-      return "http://192.168.0.11:5001"; // replace with your LAN IP
+      return "http://127.0.0.1:5001"; // replace with your LAN IP
     } else if (Platform.isAndroid || Platform.isIOS) {
       // 📱 Mobile apps need LAN IP (auto-detect if possible)
       final ip = await _getLocalIp();

@@ -1,6 +1,7 @@
 /// Sensor model
 /// -------------
 /// Represents a single sensor definition (metadata).
+library;
 
 class Sensor {
   final String name;        // e.g. "temperature"

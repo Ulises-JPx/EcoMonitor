@@ -101,7 +101,7 @@ class ApiService {
 
       if (records is! List) throw Exception("Unexpected data format from server");
 
-      return (records as List).map((json) {
+      return (records).map((json) {
         if (json is Map<String, dynamic>) {
           return SensorData.fromJson(json);
         }
