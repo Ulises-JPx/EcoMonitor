@@ -71,10 +71,10 @@ Notes on connecting to the Backend API:
 
 The app expects a configurable Backend base URL inside the API service or constants file (search for the API client in `lib/data` or `lib/core`). Update that value to point to your backend instance.
 
-Example:
+Default:
 
 ```dart
-const backendBaseUrl = 'http://10.0.2.2:5001';
+http://127.0.0.1:5001;
 ```
 
 ## Common development tasks
